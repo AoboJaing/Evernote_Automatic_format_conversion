@@ -6,16 +6,16 @@ import re
 # 输入信息：folder_name、 evernote_folder_name、 root_directory、octopress_title、octopress_categories、octopress_tags
 
 # Octopress 博客的文件和文件夹名
-folder_name = '2016-11-29-PyCharm-software-professional-download-install-Crack-Registration'
+folder_name = '2016-11-30-python2-python3-Generators-yield'
 # 马克飞象笔记的文件名
-evernote_folder_name = 'PyCharm 软件（professional版 专业版）在Windows系统上的下载、安装、破解图文教程  — 2016年11月29日 星期二'
+evernote_folder_name = 'Learning Python 019 --- 生成器（Generators）和 yield ---Ongoing --- 2016年11月30日 星期三'
 # 马克飞象笔记文件夹所在路径
 root_directory = r'D:\WorkSpace\test_ws\\'
 
 # Octopress 博客博文的title、categories、tags
-octopress_title = 'PyCharm 软件（professional版 专业版）在Windows系统上的下载、安装、破解图文教程'
-octopress_categories = '软件安装'
-octopress_tags = 'PyCharm, Windows, 软件安装'
+octopress_title = 'Learning Python 019 生成器（Generators）和 yield'
+octopress_categories = 'python'
+octopress_tags = 'd'
 
 # 在root_directory路径里面创建一个名为 folder_name 的文件夹
 try:
