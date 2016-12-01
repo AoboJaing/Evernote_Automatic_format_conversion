@@ -51,8 +51,8 @@ class EvernoteToOctopressBlog:
         # 马克飞象笔记文件夹所在路径
         self.root_directory = delimiter.join(l1[:a]) + '\\'
 
-        # print(self.evernote_folder_name)
-        # print(self.root_directory)
+        print('马克飞象笔记的文件或文件夹名：' + self.evernote_folder_name)
+        print('马克飞象笔记的文件或文件夹所在目录：' + self.root_directory)
         pass
 
     def createFolderName(self):
@@ -151,11 +151,48 @@ class EvernoteToOctopressBlog:
         pass
 
 
-if __name__ == '__main__':
-    eTo = EvernoteToOctopressBlog('2016-12-1-python-string-join', \
-                                  r'D:\WorkSpace\test_ws\Learning Python 023 类编程 — Over — 2016年12月1日 星期四.md', \
-                                  'Learning Python 026 字符串连接', \
-                                  'python', \
-                                  'python3, python2, str, 字符串, 连接, join')
-    eTo.autoProcess()
+import optparse
+
+def main():
+    # 输入信息：folder_name、 evernote_file_path、octopress_title、octopress_categories、octopress_tags
+    parser = optparse.OptionParser('usage%prog ' +\
+            '-f <folder_name> -p <evernote_file_path> -T <octopress_title> -c <octopress_categories> -t <octopress_tags>')
+    parser.add_option('-f', dest='folder_name', type='string',\
+                      help='be converted Octopress blog file and images file name')
+    parser.add_option('-p', dest='evernote_file_path', type='string', \
+                      help='evernote file path')
+    parser.add_option('-T', dest='octopress_title', type='string', \
+                      help='be converted Octopress blog\'s title')
+    parser.add_option('-c', dest='octopress_categories', type='string', \
+                      help='be converted Octopress blog\'s categories')
+    parser.add_option('-t', dest='octopress_tags', type='string', \
+                      help='be converted Octopress blog\'s tags')
+    (options, args) = parser.parse_args()
+    if (options.folder_name == None) | (options.evernote_file_path == None) | \
+            (options.octopress_title == None) | (options.octopress_categories == None) | \
+            (options.octopress_tags == None):
+        print(parser.usage)
+        exit(0)
+        pass
+    else:
+        folder_name = options.folder_name
+        evernote_file_path = options.evernote_file_path
+        octopress_title = options.octopress_title
+        octopress_categories = options.octopress_categories
+        octopress_tags = options.octopress_tags
+        # print(folder_name)
+        # print(evernote_file_path)
+        # print(octopress_title)
+        # print(octopress_categories)
+        # print(octopress_tags)
+        eTo = EvernoteToOctopressBlog(folder_name, evernote_file_path, octopress_title, octopress_categories, octopress_tags)
+        eTo.autoProcess()
+        pass
     pass
+
+if __name__ == '__main__':
+    main()
+    pass
+
+# e.g. :
+# python script\evernoteToOctopressBlog.py -f "2016-12-1-python-get-command-line-arguments" -p "D:\WorkSpace\test_ws\Python3 大型网络爬虫实战 003 — scrapy 大型静态图片网站爬虫项目实战 — 实战：爬取 169美女图片网 高清图片 — Over — 2016年11月26日 星期六\Python3 大型网络爬虫实战 003 — scrapy 大型静态图片网站爬虫项目实战 — 实战：爬取 169美女图片网 高清图片 — Over — 2016年11月26日 星期六.md" -T "Learning Python 028 获取命令行参数" -c "python" -t "python3, python2, 命令行, 参数, args"
