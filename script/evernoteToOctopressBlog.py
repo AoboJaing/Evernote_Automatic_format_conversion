@@ -21,6 +21,8 @@ class EvernoteToOctopressBlog:
         self.evernote_folder_name = ''
         # 马克飞象笔记文件夹所在路径
         self.root_directory = ''
+        self.result_file_path = ''
+        self.result_image_path = ''
         pass
 
     def __repr__(self):
@@ -57,15 +59,15 @@ class EvernoteToOctopressBlog:
 
     def createFolderName(self):
         # 在root_directory路径里面创建一个名为 folder_name 的文件夹。（如果文件夹已经存在，则不用创建）
-        folder_name_exists = os.path.exists(self.root_directory + self.folder_name)
+        folder_name_exists = os.path.exists(self.result_image_path + self.folder_name)
         try:
             if folder_name_exists == False:
-                print('Create a folder:' + self.root_directory + self.folder_name)
-                os.mkdir(self.root_directory + self.folder_name)
+                print('Create a folder:' + self.result_image_path + self.folder_name)
+                os.mkdir(self.result_image_path + self.folder_name)
                 pass
             else:
                 print(
-                    'The folder "' + self.root_directory + self.folder_name + '" was already exist. Not need to create again.')
+                    'The folder "' + self.result_image_path + self.folder_name + '" was already exist. Not need to create again.')
         except OSError as err:
             print('File error: ' + str(err))
             pass
@@ -73,7 +75,7 @@ class EvernoteToOctopressBlog:
 
     def copyImages(self):
         # 将马克飞象笔记文件夹里面的所有图片全部复制到刚刚新创建的folder_name 文件夹（路径）里面
-        copy_img_command = 'copy "' + self.root_directory + self.evernote_folder_name + r'\*.png" "' + self.root_directory + self.folder_name + r'\"'
+        copy_img_command = 'copy "' + self.root_directory + self.evernote_folder_name + r'\*.png" "' + self.result_image_path + self.folder_name + r'\"'
         # print(copy_img_command)
         os.system(copy_img_command)
         pass
@@ -88,7 +90,14 @@ class EvernoteToOctopressBlog:
 
     def replaceImgLink(self, evernote_data):
         # 将里面的图片链接替换为**Octopress**本地链接的形式
-        image_local_path = re.findall('!\[Alt text\]\((.*?)\)', evernote_data, re.S)
+        image_local_path = re.findall('!\[Alt text(.*?)\)', evernote_data, re.S)
+        for i in range(len(image_local_path)):
+            image_local_path_this = image_local_path[i]
+            image_local_path_step2 = re.findall(']\((.*?)\Z', image_local_path_this, re.S)
+            image_local_path[i] = image_local_path_step2[0]
+            pass
+        # image_local_path = re.findall('!\[Alt text\]\((.*?)\)', evernote_data, re.S)
+
         # print(image_local_path)
         image_relative_path = []
         for i in range(len(image_local_path)):
@@ -124,7 +133,7 @@ class EvernoteToOctopressBlog:
         # 删除笔记里面的 第一个标题行（# xxx） 和 归宿笔记本行（@(xxx)）
         # 以后记马克飞象笔记，第1行是标题，第3行是 归宿笔记本。所以，我们只需要简单的将前3行删除就可。
         evernote_data_list = evernote_data.splitlines()
-        octopress_file_path = self.root_directory + self.folder_name + '.markdown'  # r'F:\octopress\source\_posts\\' + self.folder_name + '.markdown'
+        octopress_file_path = self.result_file_path + self.folder_name + '.markdown'  # r'F:\octopress\source\_posts\\' + self.folder_name + '.markdown'
         octopress_file = open(octopress_file_path, 'w', encoding='utf-8')
         time_data = self.getTime()
         octopress_file = self.addOctopressBlogPrefix(octopress_file, self.octopress_title, time_data, self.octopress_categories,
@@ -139,6 +148,10 @@ class EvernoteToOctopressBlog:
 
     def autoProcess(self):
         self.autoCheckEvernoteIsFolderOrFile()
+        # self.result_file_path = self.root_directory
+        # self.result_image_path = self.root_directory
+        self.result_file_path = r'F:\octopress\source\_posts\\'
+        self.result_image_path = r'F:\octopress\source\images\\'
         if self.evernote_is_folder: # 执行以下代码的前提是：马克飞象笔记是一个文件夹
             self.createFolderName()
             self.copyImages()
